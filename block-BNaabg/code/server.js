@@ -60,12 +60,15 @@ function handleServer(req, res) {
         console.log(file_path);
 
         fs.open(file_path, 'r+', (err, fd) => {
-          fs.ftruncate(fd, 0, () => {});
-          //   fs.writeFile(fd, store, (err) => {
-          //     fs.close(fd, (err) => {
-          //       res.end(`${username} successfully Updated`);
-          //     });
-          //   });
+          fs.ftruncate(fd, (err) => {
+            if (err) return console.log(err);
+            fs.writeFile(fd, store, (err) => {
+              if (err) return console.log(err);
+              fs.close(fd, () => {
+                res.end(`${username} successfully Updated`);
+              });
+            });
+          });
         });
       }
     } else {
